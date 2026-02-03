@@ -1,7 +1,6 @@
 /**
- * main.cpp - TCP 客户端使用示例
- *
- * 演示如何使用自动重连 TCP 客户端
+ * @file main.cpp
+ * @brief TCP client usage example
  */
 
 #include <iostream>
@@ -12,11 +11,9 @@
 using namespace asioclient;
 
 int main(int argc, char* argv[]) {
-    // 默认连接参数
     std::string host = "127.0.0.1";
-    uint16_t port = 8888;
+    uint16_t port = 10086;
 
-    // 命令行参数
     if (argc >= 2) {
         host = argv[1];
     }
@@ -28,26 +25,21 @@ int main(int argc, char* argv[]) {
     std::cout << "Connecting to " << host << ":" << port << std::endl;
 
     try {
-        // 创建 IO 上下文
         asio::io_context ioContext;
-
-        // 创建客户端
         auto client = createClient(ioContext);
 
-        // 配置重连策略
+        // Configure reconnect
         ReconnectConfig config;
         config.enabled = true;
-        config.initialDelay = std::chrono::milliseconds(1000);  // 1秒
-        config.maxDelay = std::chrono::milliseconds(30000);     // 30秒
+        config.initialDelay = std::chrono::milliseconds(1000);
+        config.maxDelay = std::chrono::milliseconds(30000);
         config.backoffMultiplier = 2.0;
-        config.maxRetries = -1;  // 无限重试
+        config.maxRetries = -1;
         client->setReconnectConfig(config);
 
-        // 设置回调
+        // Set callbacks
         client->setOnConnected([&client]() {
             std::cout << "[Connected] Successfully connected to server!" << std::endl;
-
-            // 连接成功后发送测试消息
             client->send("Hello, Server!");
         });
 
@@ -63,17 +55,16 @@ int main(int argc, char* argv[]) {
             std::cout << "[Error] " << ec.message() << std::endl;
         });
 
-        // 发起连接
+        // Connect
         client->connect(host, port);
 
-        // 在单独的线程运行 IO 上下文
+        // Start IO thread
         std::thread ioThread([&ioContext]() {
-            // 使用 work guard 防止 io_context 在没有任务时退出
             auto workGuard = asio::make_work_guard(ioContext);
             ioContext.run();
         });
 
-        // 主线程处理用户输入
+        // Command loop
         std::cout << "\nCommands:" << std::endl;
         std::cout << "  send <message>  - Send a message" << std::endl;
         std::cout << "  status          - Show connection status" << std::endl;
@@ -122,7 +113,7 @@ int main(int argc, char* argv[]) {
                 continue;
             }
 
-            // 直接发送输入的内容
+            // Default: send input as message
             if (client->isConnected()) {
                 client->send(line);
             } else {
@@ -130,7 +121,7 @@ int main(int argc, char* argv[]) {
             }
         }
 
-        // 清理
+        // Shutdown
         std::cout << "Shutting down..." << std::endl;
         client->disconnect();
         ioContext.stop();

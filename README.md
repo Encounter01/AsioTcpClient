@@ -7,7 +7,7 @@
 
 > 基于 Boost.Asio 的高性能、自动重连 TCP 客户端库
 
-## 📖 目录
+## 目录
 
 - [项目简介](#项目简介)
 - [核心特性](#核心特性)
@@ -27,26 +27,26 @@ AsioTcpClient 是一个轻量级、高性能的 TCP 客户端库，专为需要�
 
 ### 适用场景
 
-- 🎮 **游戏客户端** - 与游戏服务器保持长连接，实时同步状态
-- 🏭 **物联网设备** - IoT 设备与云端通信，支持不稳定网络环境
-- 💹 **金融交易系统** - 接收实时行情推送，低延迟高可靠
-- 💬 **即时通讯** - IM 客户端与消息服务器的长连接通信
-- 🔧 **分布式系统** - 微服务之间的 TCP 通信
+- **游戏客户端** - 与游戏服务器保持长连接，实时同步状态
+- **物联网设备** - IoT 设备与云端通信，支持不稳定网络环境
+- **金融交易系统** - 接收实时行情推送，低延迟高可靠
+- **即时通讯** - IM 客户端与消息服务器的长连接通信
+- **分布式系统** - 微服务之间的 TCP 通信
 
 ### 为什么选择 AsioTcpClient？
 
 | 特性 | AsioTcpClient | 原生 Asio | 其他库 |
 |------|---------------|-----------|--------|
-| 自动重连 | ✅ 开箱即用 | ❌ 需自己实现 | ⚠️ 部分支持 |
-| 粘包处理 | ✅ 长度前缀协议 | ❌ 需自己实现 | ⚠️ 不同方案 |
-| 线程安全 | ✅ 完全支持 | ⚠️ 需注意细节 | ⚠️ 视实现而定 |
-| 学习曲线 | 🟢 简单 | 🔴 陡峭 | 🟡 中等 |
+| 自动重连 | 开箱即用 | 需自己实现 | 部分支持 |
+| 粘包处理 | 长度前缀协议 | 需自己实现 | 不同方案 |
+| 线程安全 | 完全支持 | 需注意细节 | 视实现而定 |
+| 学习曲线 | 简单 | 陡峭 | 中等 |
 | 代码量 | ~650 行 | - | 通常更多 |
 | 依赖 | 仅 Boost | - | 可能较多 |
 
 ## 核心特性
 
-### 🚀 异步非阻塞 IO
+### 异步非阻塞 IO
 
 基于 Boost.Asio 的 **Proactor 模式**，提供真正的异步非阻塞网络操作：
 
@@ -54,7 +54,7 @@ AsioTcpClient 是一个轻量级、高性能的 TCP 客户端库，专为需要�
 - Linux/macOS 使用 epoll/kqueue（模拟 Proactor）
 - 不阻塞调用线程，充分利用系统资源
 
-### 🔄 智能自动重连
+### 智能自动重连
 
 采用**指数退避算法**，网络断开后自动恢复连接：
 
@@ -67,7 +67,7 @@ AsioTcpClient 是一个轻量级、高性能的 TCP 客户端库，专为需要�
 - 支持无限重试或限制最大次数
 - 区分用户主动断开和网络异常
 
-### 📦 消息分帧协议
+### 消息分帧协议
 
 解决 TCP 粘包/拆包问题，采用**长度前缀协议**：
 
@@ -82,7 +82,7 @@ AsioTcpClient 是一个轻量级、高性能的 TCP 客户端库，专为需要�
 - 支持最大 4GB 的消息（可配置限制）
 - 防止恶意超大消息攻击
 
-### 🔒 线程安全设计
+### 线程安全设计
 
 支持多线程环境下的安全使用：
 
@@ -91,7 +91,7 @@ AsioTcpClient 是一个轻量级、高性能的 TCP 客户端库，专为需要�
 - 通过 `asio::post()` 实现跨线程调用
 - 状态查询使用 `atomic` 变量
 
-### 🎯 事件驱动架构
+### 事件驱动架构
 
 简洁的回调式 API，轻松处理各种事件：
 
@@ -102,13 +102,13 @@ client->setOnMessage([](const Message& msg) { /* 收到消息 */ });
 client->setOnError([](const std::error_code& ec) { /* 发生错误 */ });
 ```
 
-### 🌐 跨平台支持
+### 跨平台支持
 
 单一代码库，支持主流操作系统：
 
-- ✅ Windows (7/8/10/11)
-- ✅ Linux (Ubuntu, CentOS, Debian, etc.)
-- ✅ macOS (10.14+)
+- Windows (7/8/10/11)
+- Linux (Ubuntu, CentOS, Debian, etc.)
+- macOS (10.14+)
 
 ## 快速开始
 
@@ -160,29 +160,29 @@ int main() {
 
     // 配置自动重连
     ReconnectConfig config;
-    config.enabled = true;                                    // 启用自动重连
-    config.initialDelay = std::chrono::milliseconds(1000);   // 初始延迟 1 秒
-    config.maxDelay = std::chrono::milliseconds(30000);      // 最大延迟 30 秒
-    config.backoffMultiplier = 2.0;                          // 指数退避倍数
-    config.maxRetries = -1;                                  // 无限重试
+    config.enabled = true;
+    config.initialDelay = std::chrono::milliseconds(1000);
+    config.maxDelay = std::chrono::milliseconds(30000);
+    config.backoffMultiplier = 2.0;
+    config.maxRetries = -1;
     client->setReconnectConfig(config);
 
     // 设置事件回调
     client->setOnConnected([&client]() {
-        std::cout << "✅ 连接成功！" << std::endl;
+        std::cout << "连接成功！" << std::endl;
         client->send("Hello from Client!");
     });
 
     client->setOnDisconnected([]() {
-        std::cout << "❌ 连接断开，正在重连..." << std::endl;
+        std::cout << "连接断开，正在重连..." << std::endl;
     });
 
     client->setOnMessage([](const Message& msg) {
-        std::cout << "📨 收到消息: " << msg.bodyAsString() << std::endl;
+        std::cout << "收到消息: " << msg.bodyAsString() << std::endl;
     });
 
     client->setOnError([](const std::error_code& ec) {
-        std::cerr << "⚠️  错误: " << ec.message() << std::endl;
+        std::cerr << "错误: " << ec.message() << std::endl;
     });
 
     // 连接到服务器
@@ -615,10 +615,10 @@ const ReconnectConfig& reconnectConfig() const;
 
 ```cpp
 // 构造函数
-Message();                                      // 默认构造（空消息）
-explicit Message(const std::string& body);      // 从字符串构造
-explicit Message(const std::vector<char>& body); // 从 vector 拷贝构造
-explicit Message(std::vector<char>&& body);     // 从 vector 移动构造
+Message();
+explicit Message(const std::string& body);
+explicit Message(const std::vector<char>& body);
+explicit Message(std::vector<char>&& body);
 
 // 访问器
 const std::vector<char>& body() const;
@@ -630,7 +630,7 @@ std::string bodyAsString() const;
 void setBody(const std::string& data);
 void setBody(const char* data, size_t len);
 
-// 编解码（通常无需直接调用）
+// 编解码
 std::vector<char> encode() const;
 static uint32_t decodeHeader(const char* data);
 static bool isValidLength(uint32_t len);
@@ -641,19 +641,19 @@ static bool isValidLength(uint32_t len);
 ```cpp
 // 客户端状态
 enum class ClientState {
-    Disconnected,    // 未连接
-    Connecting,      // 连接中
-    Connected,       // 已连接
-    Reconnecting     // 重连中
+    Disconnected,
+    Connecting,
+    Connected,
+    Reconnecting
 };
 
 // 重连配置
 struct ReconnectConfig {
-    bool enabled = true;                                  // 是否启用
-    std::chrono::milliseconds initialDelay{1000};         // 初始延迟
-    std::chrono::milliseconds maxDelay{30000};            // 最大延迟
-    double backoffMultiplier = 2.0;                       // 退避倍数
-    int maxRetries = -1;                                  // 最大重试次数
+    bool enabled = true;
+    std::chrono::milliseconds initialDelay{1000};
+    std::chrono::milliseconds maxDelay{30000};
+    double backoffMultiplier = 2.0;
+    int maxRetries = -1;
 };
 ```
 
@@ -714,9 +714,9 @@ void startHeartbeat(TcpClientPtr client) {
 **A:** 按以下顺序操作：
 
 ```cpp
-client->disconnect();      // 1. 断开连接
-ioContext.stop();          // 2. 停止事件循环
-if (ioThread.joinable()) { // 3. 等待 IO 线程结束
+client->disconnect();
+ioContext.stop();
+if (ioThread.joinable()) {
     ioThread.join();
 }
 ```
@@ -728,7 +728,7 @@ if (ioThread.joinable()) { // 3. 等待 IO 线程结束
 ```cpp
 client->setOnDisconnected([&ioContext, &client]() {
     asio::post(ioContext, [&client]() {
-        client.reset();  // 在下一轮事件循环中删除
+        client.reset();
     });
 });
 ```
@@ -738,7 +738,7 @@ client->setOnDisconnected([&ioContext, &client]() {
 **A:** 确保在 `CMakeLists.txt` 中正确设置 Boost 路径：
 
 ```cmake
-set(BOOST_ROOT "D:/softcpp/boost_1_81_0")  # 修改为你的路径
+set(BOOST_ROOT "D:/softcpp/boost_1_81_0")
 set(Boost_INCLUDE_DIR "D:/softcpp/boost_1_81_0")
 ```
 
@@ -827,19 +827,6 @@ delay = min(initialDelay × backoffMultiplier^attempts, maxDelay)
 - 复现步骤
 - 错误信息或日志
 
-## 扩展阅读
-
-### 相关文档
-
-- [STAR 项目介绍](STAR项目介绍.md) - 面试向项目介绍（STAR 法则）
-- [项目技术讲解](项目技术讲解.md) - 深入技术实现细节
-
-### 外部资源
-
-- [Boost.Asio 官方文档](https://www.boost.org/doc/libs/release/doc/html/boost_asio.html)
-- [C++ Networking TS](https://en.cppreference.com/w/cpp/experimental/networking)
-- [Proactor 模式详解](https://en.wikipedia.org/wiki/Proactor_pattern)
-
 ## 许可证
 
 本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
@@ -855,10 +842,6 @@ delay = min(initialDelay × backoffMultiplier^attempts, maxDelay)
 
 ---
 
-<div align="center">
-
-**如果这个项目对你有帮助，请给一个 ⭐ Star！**
+**如果这个项目对你有帮助，请给一个 Star！**
 
 [报告问题](https://github.com/Encounter01/AsioTcpClient/issues) · [请求功能](https://github.com/Encounter01/AsioTcpClient/issues) · [讨论交流](https://github.com/Encounter01/AsioTcpClient/discussions)
-
-</div>

@@ -8,6 +8,7 @@ lib/
 # IDE files
 .idea/
 .vscode/
+.vs/
 *.suo
 *.user
 *.sln.docstates
@@ -39,3 +40,7 @@ nul
 
 # Log files
 *.log
+
+# Learning documents (local only)
+STAR项目介绍.md
+项目技术讲解.md
